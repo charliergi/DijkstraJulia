@@ -1,23 +1,20 @@
-#Created By Gilles
+#Created By Gilles & Antoine
+function dijkstra(i,j,matadj)
+  #initialisation
+  mat = matadj
+  n=size(mat,1)
+  infinity = typemax(Int64)
+  vectorInt = Int64[]
+  vectorPath = String[]
+  for k=1:n,l=1:n
+    mat[k,l]=infinity
+  end
+  mat[i,i]=0
+  return mat
+end
 
-
-  function test_function(x;z=0) #z is an optional argument
-    if z==0
-      return x+1#Return a tuple
-    else
-    return x+5 #Return a different tuple
-    #whitespace is optional
-    end #End if statement
-  end #End function definition
-
-println(test_function(1))
-
-mat = [1 2 3 4
-      5 6 7 8]
-println(mat)
-
-size(mat)
-
-x,y = size(mat)
-println(x)
-println(y)
+#test
+matrice = [1 2
+            2 2]
+test= dijkstra(1,2,matrice)
+println(test)
