@@ -19,7 +19,7 @@ public class Converter {
             String s = br.readLine();
             if (s.contains("graph")) {
                 br.readLine();
-                int nodes = 0;
+                int nodes = 0; //test
                 while (!(s = br.readLine()).contains("]")) {
                     if (s.contains("node")) {
                         br.readLine();
