@@ -1,45 +1,34 @@
 
 #Created By Gilles & Antoine
-
-function notInTheFridge(element,vectorPath)
-  isIn = false
-  for i=1:length(vectorPath)
-    if (element==vectorPath[i])
-      isIn = true
-  end
-    return isin
-end
-      
-# function closest
-#
-
-function closest(index,matadj)
+# regarde la ligne line de la matrice d'adjacence et renvoie la colonne du plus petit noeud qui n'est pas dans le fridge et >0
+function closest(vector,fridge)
   min = typemax(Int64)
-  for k=1:n
-    if((matadj[index,k]<min) & (matadj[index,k] != 0) & (notInTheFridge(k,vectorPath)==false))
-      min=u 
+  index=-1
+  for k=1:size(vector,2)
+    if((vector[k]<min) & (in(k,fridge)==false))
+
       index=k # renvoie l'index auquel se trouve le plus petit element de la ligne index
-      
-  end
+    end
+  return index
 end
-  
+
 function dijkstra(i,j,matadj)
   #initialisation
-  mat = matadj
-  n=size(mat,1)
-  for k=1:n,l=1:n
-    mat[k,l]=typemax(Int64)
-  end
-  mat[i,i]=0
-  vectorPath = Int64[]
-  #body
-  notDone=true
-  while(notInTheFridge(j,vectorPath)==false)
-     u=
-     push!(vectorPath,closest())
-    # verifier si le noeud ajouté se trouve à l'index j
-    # si oui : done = true
-    # si non : done = false et continuer
 
-  #end
+  vector = Array{Int64,size(matadj,1)}
+  size=size(vector,2)
+  for k=1:size
+    vector[k]=typemax(Int64)
+  end
+  vector[i]=0
+  fridge = Array{Int64,1}
+  #body
+  println(k)
+  while(in(j,fridge)==false)
+     u=closest(vector,fridge)
+     push!(fridge,u)
+     for k=1:size
+       if in(k,fridge)==false & vector[u]
+
+  end
 end
