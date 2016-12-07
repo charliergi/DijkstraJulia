@@ -1,4 +1,3 @@
-
 #Created By Gilles & Antoine
 # regarde la ligne line de la matrice d'adjacence et renvoie la colonne du plus petit noeud qui n'est pas dans le fridge et >0
 function closest(vector,fridge)
@@ -21,14 +20,16 @@ function dijkstra(i,j,matadj)
     vector[k]=typemax(Int64)
   end
   vector[i]=0
-  fridge = Array{Int64,1}
+  fridge = Int64[]
   #body
   println(k)
   while(in(j,fridge)==false)
      u=closest(vector,fridge)
      push!(fridge,u)
-     for k=1:size
-       if in(k,fridge)==false & vector[u]
-
+     for v=1:size
+       if in(v,fridge)==false & vector[u]+matadj[u,v]<vector[v]
+         vector[v]=vector[u]+matadj[u,v]
+       end
   end
+  return vector[end]
 end
