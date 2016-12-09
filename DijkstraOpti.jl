@@ -19,6 +19,7 @@ function transform(mat)
         mat[k,l] = Inf
       end
   end
+  return mat
 end
 
 function dijkstra(i,j,matadj)
@@ -30,13 +31,13 @@ function dijkstra(i,j,matadj)
     vector[k]=Inf
   end
   vector[i]=0
-  fridge = Array{Float64}(0)
+  fridge = Array{Int64}(0)
    #body
   while(!(in(j,fridge)))
      u=closest(vector,fridge,n)
      push!(fridge,u)
      for v=1:n
-       if (!(in(v,fridge)) & vector[u]+matadj[u,v]<vector[v])
+       if ((!(in(v,fridge))) & (vector[u]+matadj[u,v]<vector[v]))
          vector[v]=vector[u]+matadj[u,v]
        end
      end
@@ -44,7 +45,7 @@ function dijkstra(i,j,matadj)
     return vector[j]
 end
 
-p=[0 4 2 0 0 0
+p=Float64[0 4 2 0 0 0
 4 0 1 5 0 0
 2 1 0 8 10 0
 0 5 8 0 2 6
