@@ -12,8 +12,8 @@ function closest(vector,fridge,n)
   return index
 end
 
-function transform(mat,n)
-  mat=convert(Array{Float64},mat)
+function transform(matadj,n)
+  mat=convert(Array{Float64},matadj)
   for  k=1:n,l=1:n
         if ((k!=l) && (mat[k,l]==0.0))
         mat[k,l] = Inf
@@ -21,10 +21,10 @@ function transform(mat,n)
   end
   return mat
 end
-function dijkstra(i,j,matadj)
+function dijkstra(i,j,mat)
   #initialisation
-  n=size(matadj,1)
-  matadj=transform(matadj,n)
+  n=size(mat,1)
+  matadj=transform(mat,n)
   vector = Array{Float64}(n)
   for k=1:n
     vector[k]=Inf
@@ -51,8 +51,7 @@ function dijkstra(i,j,matadj)
     k=pred[k]
   end
   unshift!(path,i)
-  return vector[j]
-  #return path
+  return [vector[j],path]
 end
 
 p=[0 85 217 0 173 0 0 0 0 0
@@ -65,4 +64,4 @@ p=[0 85 217 0 173 0 0 0 0 0
 0 0 103 183 0 0 0 0 0 167
 0 0 0 0 0 250 0 0 0 84
 0 0 0 0 502 0 0 167 84 0]
-print(dijkstra(1,10,p))
+println(dijkstra(1,10,p))
