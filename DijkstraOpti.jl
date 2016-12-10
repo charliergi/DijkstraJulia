@@ -61,6 +61,19 @@ function dijkstra(i,j,mat)
   return [vector[j],path]
 end
 
+ function floydWarshall(i,j,mat)
+   n=size(mat,1)
+   matadj=transform(mat,n)
+   for k=1:n
+     for l=1:n
+       for m=1:n
+         matadj[l,m] = min(matadj[l,m],matadj[l,k]+matadj[k,m])
+       end
+     end 
+   end
+   return matadj[i,j]
+ end
+ print(floydWarshall(1,10,p))
 p=[0 85 217 0 173 0 0 0 0 0
 85 0 0 0 0 80 0 0 0 0
 217 0 0 0 0 0 186 103 0 0
