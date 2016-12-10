@@ -4,37 +4,57 @@
 # ◮ Outputs a vector d where di is the shortest distance from s to node i
 # ◮ Can detect a negative-weight cycle
 # ◮ Runs in Θ(nm) time
-function belFord(matadj,s,i)
-  #initialization
+function bellmanFord(matadj,s)
   sizeOfMatrix = size(matadj,1)
-  println(sizeOfMatrix)
-  d=Array{Float64}(sizeOfMatrix)
-  for k=1:sizeOfMatrix
-    d[k]=Inf
-  end
-  d[s]=0
-  #println(d)
-  #println(d)
-  for k=1:sizeOfMatrix-1
-    #println("passe")
-    for u=1:sizeOfMatrix,v=1:sizeOfMatrix
-      c=matadj[u,v]
-      #println(c)
-      d[v] = min(d[v],d[u]+c)
-      if u==4 && k==1
-        println(d)
-      end
-      #println(d)
+  #list of edges
+  listOfEdges = Array{Any}(0)
+
+  for i=1:sizeOfMatrix-1
+    for j=1+i:sizeOfMatrix
+      push!(listOfEdges,(i,j,matadj[i,j]))
     end
   end
-  #println(d)
-  for h=1:sizeOfMatrix
-    if h==i return d[h]
+  for i=2:sizeOfMatrix
+    for j=1:i-1
+      push!(listOfEdges,(i,j,matadj[i,j]))
     end
   end
-  return -1
+  #println(listOfEdges)
+  #println(listOfEdges)
+
+  #println(listOfEdges)
+  #list of vertices
+  listOfVertices=Array{Float64}(sizeOfMatrix)
+  for i=1:sizeOfMatrix
+    listOfVertices[i]=i
+  end
+  #println(listOfVertices)
+  #initilisation
+  listOfDistances = Array{Float64}(sizeOfMatrix)
+  listOfPredecessors = Array{Float64}(sizeOfMatrix)
+
+  for i=1:sizeOfMatrix
+    listOfDistances[i]= Inf
+    listOfPredecessors[i]=-1 # no predecessor
+  end
+  listOfDistances[s]=0
+  #println(listOfDistances)
+  for i=1:size(listOfVertices,1)-1
+    for j=1:size(listOfEdges,1)
+      (u,v,w)=listOfEdges[j]
+      listOfDistances[v] = min(listOfDistances[v],listOfDistances[u] + w)
+    end
+  end
+  #println("passeee")
+  #verification ?
+  #println(listOfPredecessors)
+  println((listOfDistances,listOfPredecessors))
+  return (listOfDistances,listOfPredecessors)
 end
 
+floydWarshall(1,10,p)
+
+bellmanFord(l,1)
 p=Float64[0 85 217 0 173 0 0 0 0 0
           85 0 0 0 0 80 0 0 0 0
           217 0 0 0 0 0 186 103 0 0
@@ -58,4 +78,10 @@ l=Float64[0 5 10 1
           5 0 2 0
           10 2 0 1
           1 0 1 0]
-println(belFord(l,1,2))
+#=test = Array{Any}(0)
+push!(test,(1,2,3))
+push!(test,(4,5,6))
+println(test)
+(x,y,z) = test[1]
+println(x)
+=#
