@@ -47,7 +47,7 @@ function dijkstra(i,j,mat)
      for v=1:n
        if ((!(in(v,fridge))) && (vector[u]+matadj[u,v]<vector[v]))
          vector[v]=vector[u]+matadj[u,v] # met à jour les labels des noeuds qui ne sont pas dans le frigo
-         pred[v]=u # place ds le tableau les prédécesseurs du noeud u
+         pred[v]=u # le predecesseur de v est u
        end
      end
   end
@@ -61,19 +61,41 @@ function dijkstra(i,j,mat)
   return [vector[j],path]
 end
 
+
+
  function floydWarshall(i,j,mat)
    n=size(mat,1)
    matadj=transform(mat,n)
+   pred = Matrix{Float64}(n,n)
+   for l=1:n
+     for m=1:n
+      if((l==m) || (matadj[l,m] == Inf))
+       pred[l,m] = -1
+      end
+      pred[l,m] = l
+    end
+  end
+
    for k=1:n
      for l=1:n
        for m=1:n
          matadj[l,m] = min(matadj[l,m],matadj[l,k]+matadj[k,m])
+         pred[l,m]=pred[k,m]
        end
-     end 
+     end
    end
-   return matadj[i,j]
+   path = Array{Int64}(0) #création du chemin
+   s=j # initialisation de s au noeud d'arrivée
+   while(s != i)
+     unshift!(path,s)
+     s=pred[i,s]
+   end # ajoute au début du tableau chemin les noeuds prédécesseurs de j jusqu'au noeud départ
+  unshift!(path,i) # ajoute finalement au début du tableau chemin le noeud de départ
+
+   return [matadj[i,j],path]
  end
  print(floydWarshall(1,10,p))
+
 p=[0 85 217 0 173 0 0 0 0 0
 85 0 0 0 0 80 0 0 0 0
 217 0 0 0 0 0 186 103 0 0
@@ -84,4 +106,4 @@ p=[0 85 217 0 173 0 0 0 0 0
 0 0 103 183 0 0 0 0 0 167
 0 0 0 0 0 250 0 0 0 84
 0 0 0 0 502 0 0 167 84 0]
-println(dijkstra(1,10,p))
+#println(dijkstra(1,10,p))
