@@ -5,6 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.LinkedList;
+import java.io.File;
+import com.csvreader.CsvWriter;
+
 
 /**
  * Created by Sami on 01/12/2016.
@@ -19,13 +26,13 @@ public class Converter {
             String s = br.readLine();
             if (s.contains("graph")) {
                 br.readLine();
-                int nodes = 0; //test
+                int nodes = 0;
                 while (!(s = br.readLine()).contains("]")) {
                     if (s.contains("node")) {
                         br.readLine();
-                        while (!(s = br.readLine()).contains("]"));
+                        while (!(s = br.readLine()).contains("]")) ;
                         nodes += 1;
-                    } else if (s.contains("edge")){
+                    } else if (s.contains("edge")) {
                         if (matrix == null) {
                             matrix = new float[nodes][nodes];
                             for (int i = 0; i < nodes; i++) {
@@ -45,7 +52,7 @@ public class Converter {
                                 String[] split = s.split(" ");
                                 target = Integer.parseInt(split[5]);
                             } else if (s.contains("value")) {
-                                System.out.println(s);
+                                //System.out.println(s);
                                 String[] split = s.split(" ");
                                 weight = Float.parseFloat(split[5]);
                             }
@@ -65,15 +72,30 @@ public class Converter {
 
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
-        readFile(s.nextLine());
-        System.out.print("[");
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                System.out.print(matrix[i][j] + " ");
+        String parts = s.nextLine();
+        String[] parting = parts.split(" ");
+        String outputFile = parting[1];
+        // before we open the file check to see if it already exists
+        boolean alreadyExists = new File(parting[1]).exists();
+        try {
+            readFile(parting[0]);
+
+            if(!alreadyExists) {
+                System.out.println("passé");
+                CsvWriter csvOutput = new CsvWriter(new FileWriter(parting[1], true), ',');
+                for (int i = 0; i < matrix.length; i++) {
+                    for (int j = 0; j < matrix[i].length; j++) {
+                        csvOutput.write(Float.toString(matrix[i][j]));
+
+                    }
+                    csvOutput.endRecord();
+                }
+                csvOutput.close();
             }
-            System.out.println(";");
+        } catch (java.io.IOException e) {
+            System.out.println("Invalid path - error message : " + e.getMessage());
+        } finally {
+            s.close();
         }
-        System.out.print("]");
-        s.close();
     }
 }
