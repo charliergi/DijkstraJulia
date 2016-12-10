@@ -4,7 +4,7 @@ function closest(vector,fridge,n)
   min = Inf
   index=-1
   for k=1:n
-    if((vector[k]<min) & (!(in(k,fridge))))
+    if((vector[k]<min) && (!(in(k,fridge))))
       index=k                                                                                                                                                                                                                                                                     =k
       min=vector[k] # renvoie l'index auquel se trouve le plus petit element de la ligne index
     end
@@ -12,40 +12,50 @@ function closest(vector,fridge,n)
   return index
 end
 
-function transform(mat)
-  n=size(mat,1)
+function transform(mat,n)
+  mat=convert(Array{Float64},mat)
   for  k=1:n,l=1:n
-      if ((k!=l) & (mat[k,l]==0.0))
+        if ((k!=l) && (mat[k,l]==0.0))
         mat[k,l] = Inf
       end
   end
   return mat
 end
-
 function dijkstra(i,j,matadj)
   #initialisation
   n=size(matadj,1)
-  transform(matadj)
+  matadj=transform(matadj,n)
   vector = Array{Float64}(n)
   for k=1:n
     vector[k]=Inf
   end
   vector[i]=0
   fridge = Array{Int64}(0)
-   #body
+  pred = Array{Int64}(n)
+  #body
   while(!(in(j,fridge)))
      u=closest(vector,fridge,n)
      push!(fridge,u)
      for v=1:n
-       if ((!(in(v,fridge))) & (vector[u]+matadj[u,v]<vector[v]))
+       if ((!(in(v,fridge))) && (vector[u]+matadj[u,v]<vector[v]))
          vector[v]=vector[u]+matadj[u,v]
-       end
+         pred[v]=u
+
+        end
      end
   end
-    return vector[j]
+  path = Array{Int64}(0)
+  k=j
+  while(k != i)
+    unshift!(path,k)
+    k=pred[k]
+  end
+  unshift!(path,i)
+  return vector[j]
+  #return path
 end
 
-p=Float64[0 85 217 0 173 0 0 0 0 0
+p=[0 85 217 0 173 0 0 0 0 0
 85 0 0 0 0 80 0 0 0 0
 217 0 0 0 0 0 186 103 0 0
 0 0 0 0 0 0 0 183 0 0
