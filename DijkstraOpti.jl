@@ -92,11 +92,33 @@ end
    end # ajoute au début du tableau chemin les noeuds prédécesseurs de j jusqu'au noeud départ
   unshift!(path,i) # ajoute finalement au début du tableau chemin le noeud de départ
 
-   return [matadj[i,j],path]
- end
- print(floydWarshall(1,10,p))
+  return [matadj[i,j],path]
+end
 
-p=[0 85 217 0 173 0 0 0 0 0
+function main()
+  println("enter the path of your .csv file :")
+  path = input() #Path of the .csv file
+  println("node 1 :")
+  node1 = parse(Int,input())
+  println("node 2 :")
+  node2 = parse(Int,input())
+
+  matadj = readdlm(path, ',');
+  # les fonctions s'executent ici :
+  # type of matadj : Array{Float64,2} --> pas besoin de conversion :)
+  println("Dijstra result : ")
+  println(dijkstra(node1,node2,matadj))
+end
+main();
+#=function input(prompt::AbstractString="")
+    print(prompt)
+    return chomp(readline())
+
+end
+=#
+#print(floydWarshall(1,10,p))
+
+#=p=[0 85 217 0 173 0 0 0 0 0
 85 0 0 0 0 80 0 0 0 0
 217 0 0 0 0 0 186 103 0 0
 0 0 0 0 0 0 0 183 0 0
@@ -107,3 +129,4 @@ p=[0 85 217 0 173 0 0 0 0 0
 0 0 0 0 0 250 0 0 0 84
 0 0 0 0 502 0 0 167 84 0]
 #println(dijkstra(1,10,p))
+=#
