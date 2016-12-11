@@ -71,31 +71,45 @@ public class Converter {
     }
 
     public static void main(String[] args) {
+        System.out.println("Please put the path of your gml graph followed by a space, followed by the name of the desired csv file");
+        System.out.println("home/username/Desktop/graph.gml name.csv");
         Scanner s = new Scanner(System.in);
         String parts = s.nextLine();
         String[] parting = parts.split(" ");
-        String outputFile = parting[1];
-        // before we open the file check to see if it already exists
-        boolean alreadyExists = new File(parting[1]).exists();
-        try {
-            readFile(parting[0]);
+        if(parting.length ==2) {
+            String outputFile = parting[1];
+            // before we open the file check to see if it already exists
+            boolean alreadyExists = new File(parting[1]).exists();
+            try {
+                readFile(parting[0]);
 
-            if(!alreadyExists) {
-                System.out.println("passé");
-                CsvWriter csvOutput = new CsvWriter(new FileWriter(parting[1], true), ',');
-                for (int i = 0; i < matrix.length; i++) {
-                    for (int j = 0; j < matrix[i].length; j++) {
-                        csvOutput.write(Float.toString(matrix[i][j]));
+                if (!alreadyExists) {
+                    CsvWriter csvOutput = null;
+                    try {
+                        csvOutput = new CsvWriter(new FileWriter(parting[1], true), ',');
+                        for (int i = 0; i < matrix.length; i++) {
+                            for (int j = 0; j < matrix[i].length; j++) {
+                                csvOutput.write(Float.toString(matrix[i][j]));
 
+                            }
+                            csvOutput.endRecord();
+                        }
+                    }catch(NullPointerException e ){
+                        System.out.println("invalid path");
                     }
-                    csvOutput.endRecord();
+                   
+                    csvOutput.close();
+                }else{
+                    System.out.println("Invalid name : the csv file already exists in the current location");
                 }
-                csvOutput.close();
+            } catch (java.io.IOException e) {
+                System.out.println("Invalid path - error message : " + e.getMessage());
+            } finally {
+                s.close();
             }
-        } catch (java.io.IOException e) {
-            System.out.println("Invalid path - error message : " + e.getMessage());
-        } finally {
-            s.close();
+
+        }else{
+            System.out.println("Invalid Entry");
         }
     }
 }
