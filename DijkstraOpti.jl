@@ -61,39 +61,38 @@ function dijkstra(i,j,mat)
   return [vector[j],path]
 end
 
-
-
- function floydWarshall(i,j,mat)
+function floydWarshall(i,j,mat)
    n=size(mat,1)
    matadj=transform(mat,n)
-   pred = Matrix{Float64}(n,n)
-   for l=1:n
-     for m=1:n
-      if((l==m) || (matadj[l,m] == Inf))
-       pred[l,m] = -1
+   pred = Matrix{Int64}(n,n)
+   for a=1:n
+     for b=1:n
+      if ((a===b) || (matadj[a,b]==Inf))
+        pred[a,b] = -1
+      else
+        pred[a,b] = a
       end
-      pred[l,m] = l
-    end
-  end
-
+     end
+   end
    for k=1:n
      for l=1:n
        for m=1:n
-         matadj[l,m] = min(matadj[l,m],matadj[l,k]+matadj[k,m])
-         pred[l,m]=pred[k,m]
-       end
+         if (matadj[l,m]>(matadj[l,k]+matadj[k,m]))
+         pred[l,m] = pred[k,m]
+         matadj[l,m] = matadj[l,k]+matadj[k,m]
+         end
+        end
      end
    end
    path = Array{Int64}(0) #création du chemin
-   s=j # initialisation de s au noeud d'arrivée
+   s = j # initialisation de s au noeud d'arrivée
    while(s != i)
-     unshift!(path,s)
-     s=pred[i,s]
-   end # ajoute au début du tableau chemin les noeuds prédécesseurs de j jusqu'au noeud départ
-  unshift!(path,i) # ajoute finalement au début du tableau chemin le noeud de départ
-
-  return [matadj[i,j],path]
-end
+     unshift!(path,pred[1,s])
+     s = pred[1,s]
+   end
+   push!(path,j)
+   return [matadj[i,j],path]
+ end
 
 function main()
   println("enter the path of your .csv file :")
@@ -108,17 +107,13 @@ function main()
   # type of matadj : Array{Float64,2} --> pas besoin de conversion :)
   println("Dijstra result : ")
   println(dijkstra(node1,node2,matadj))
+  println("FloydWarshall result : ")
+  println(floydWarshall(node1,node2,matadj))
 end
 main();
-#=function input(prompt::AbstractString="")
-    print(prompt)
-    return chomp(readline())
 
-end
-=#
-#print(floydWarshall(1,10,p))
 
-#=p=[0 85 217 0 173 0 0 0 0 0
+p=[0 85 217 0 173 0 0 0 0 0
 85 0 0 0 0 80 0 0 0 0
 217 0 0 0 0 0 186 103 0 0
 0 0 0 0 0 0 0 183 0 0
@@ -129,4 +124,3 @@ end
 0 0 0 0 0 250 0 0 0 84
 0 0 0 0 502 0 0 167 84 0]
 #println(dijkstra(1,10,p))
-=#
