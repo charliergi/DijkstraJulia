@@ -6,7 +6,7 @@ function closest(vector,fridge,n)
   index=-1
   for k=1:n
     if((vector[k]<min) && (!(in(k,fridge))))
-      index=k                                                                                                                                                                                                                                                                     
+      index=k
       min=vector[k]
     end
   end
@@ -106,7 +106,7 @@ function floydWarshall(i,j,mat)
    s = j
    while(s != i)
      unshift!(path,pred[1,s])
-     s = pred[1,s]
+     s = pred[i,s]
    end
    push!(path,j)
    return [matadj[i,j],path]
