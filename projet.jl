@@ -94,8 +94,8 @@ function floydWarshall(i,j,mat)
        for m=1:n
          # si le plus court chemin passe par k alors on peut le diviser en 2sous-chemin allant de l a k et de k a m
          if (matadj[l,m]>(matadj[l,k]+matadj[k,m]))
-          matadj[l,m] = matadj[l,k]+matadj[k,m]
-          pred[l,m] = pred[k,m]
+         pred[l,m] = pred[k,m]
+         matadj[l,m] = matadj[l,k]+matadj[k,m]
          end
         end
      end
@@ -105,7 +105,7 @@ function floydWarshall(i,j,mat)
    path = Array{Int64}(0)
    s = j
    while(s != i)
-     unshift!(path,pred[i,s])
+     unshift!(path,pred[1,s])
      s = pred[i,s]
    end
    push!(path,j)
