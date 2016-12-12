@@ -6,7 +6,7 @@ function closest(vector,fridge,n)
   index=-1
   for k=1:n
     if((vector[k]<min) && (!(in(k,fridge))))
-      index=k                                                                                                                                                                                                                                                                     =k
+      index=k                                                                                                                                                                                                                                                                     
       min=vector[k]
     end
   end
