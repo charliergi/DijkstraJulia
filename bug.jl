@@ -34,10 +34,10 @@ input: 2 entier: i le noeud de depart et j le noeud d'arrivee
        un tableau a 2 dimensions: matadj qui est la matrice d'adjacence du graphe dont les elements peuvent etre des entiers ou des reels
 output: renvoie une liste de 2 elements: le premier etant la distance entre les 2 noeuds, le deuxieme etant le chemin parcouru entre les deux noeuds
 =#
-function dijkstra(i,j,matadj)
+function dijkstra(i,j,mat)
   #initialisation de tous les labels a l'infini sauf le label de depart qui est initialise a 0
-  n=size(matadj,1) # n= le nombre de noeuds
-  mat=transform(matadj,n)
+  n=size(mat,1) # n= le nombre de noeuds
+  #mat=transform(matadj,n)
   vector = Array{Float64}(n)
   for k=1:n
     vector[k]=Inf
@@ -77,9 +77,9 @@ input: 2 entier: i le noeud de depart et j le noeud d'arrivee
        un tableau a 2 dimensions: matadj qui est la matrice d'adjacence du graphe dont les elements peuvent etre des entiers ou des reels
 output: renvoie une liste de 2 elements: le premier etant la distance entre les 2 noeuds, le deuxieme etant le chemin parcouru entre les deux noeuds
 =#
-function floydWarshall(i,j,matadj)
-   n=size(matadj,1)
-   mat=transform(matadj,n)
+function floydWarshall(i,j,mat)
+   n=size(mat,1)
+   #mat=transform(matadj,n)
 
    #initialisation de la matrice pred
    pred = Matrix{Int64}(n,n)
@@ -127,8 +127,7 @@ function floydWarshall(i,j,matadj)
  0 0 1/103 1/183 0 0 0 0 0 1/167
  0 0 0 0 0 1/250 0 0 0 1/84
  0 0 0 0 1/502 0 0 1/167 1/84 0]
-println(transform(p,10))
-#println(transform(q,10))
+
  q = [0 85 217 0 173 0 0 0 0 0
  85 0 0 0 0 80 0 0 0 0
  217 0 0 0 0 0 186 103 0 0
@@ -151,8 +150,8 @@ println(transform(p,10))
         Inf Inf Inf Inf Inf 250.0 Inf Inf 0.0 84.0
          Inf Inf Inf Inf 502.0 Inf Inf 167.0 84.0 0.0]
 
- #println(dijkstra(1,10,p))
- println(floydWarshall(1,10,p))
+ println(dijkstra(1,10,k))
+ println(floydWarshall(1,10,k))
 
 #function main()
 #  println("enter the path of your .csv file :")
