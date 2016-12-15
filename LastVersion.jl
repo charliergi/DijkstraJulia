@@ -13,22 +13,26 @@ function closest(vector,fridge,n)
   return index
 end
 
-# Crée une matrice qui sera la matrice de cout de la matrice d'adjacence
-function transform(matadj,n)
-  convert(Array{Float64},matadj)
-  mat = Matrix{Float64}(n,n)
+# Cree une matrice qui sera soit:
+# une matrice Float64 de cout correspondante a la matrice d'adjacence rentree (isAdj = true)
+# une matrice de cout identique convertie en Float64
+function transform(mat,n,isAdj)
+  convert(Array{Float64},mat)
+  matAux = Matrix{Float64}(n,n)
   for i=1:n,j=1:n
-    mat[i,j]=matadj[i,j]
+    matAux[i,j]=mat[i,j]
   end
 
   for  k=1:n,l=1:n
-        if (mat[k,l]==0.0)
-          mat[k,l] = Inf
-        else
-          mat[k,l]= (1/mat[k,l])
-        end
+    if (matAux[k,l]==0.0)
+      matAux[k,l] = Inf
+    else
+      if (isAdj) # true --> tranformer la matrice adj en cost
+        matAux[k,l]= (1/matAux[k,l])
+      end
+    end
   end
-  return mat
+  return matAux
 end
 
 
@@ -37,10 +41,10 @@ input: 2 entier: i le noeud de depart et j le noeud d'arrivee
        un tableau a 2 dimensions: matadj qui est la matrice d'adjacence du graphe dont les elements peuvent etre des entiers ou des reels
 output: renvoie une liste de 2 elements: le premier etant la distance entre les 2 noeuds, le deuxieme etant le chemin parcouru entre les deux noeuds
 =#
-function dijkstra(i,j,matadj)
+function dijkstra(i,j,matcost)
   #initialisation de tous les labels a l'infini sauf le label de depart qui est initialise a 0
-  n=size(matadj,1) # n= le nombre de noeuds
-  mat=transform(matadj,n)
+  n=size(matcost,1) # n= le nombre de noeuds
+  #mat=transform(matadj,n)
   vector = Array{Float64}(n)
   for k=1:n
     vector[k]=Inf
@@ -56,8 +60,8 @@ function dijkstra(i,j,matadj)
      push!(fridge,u)
      # met a jour les labels des noeuds qui ne sont pas dans le frigo
      for v=1:n
-       if ((!(in(v,fridge))) && (vector[u]+mat[u,v]<vector[v]))
-         vector[v]=vector[u]+mat[u,v]
+       if ((!(in(v,fridge))) && (vector[u]+matcost[u,v]<vector[v]))
+         vector[v]=vector[u]+matcost[u,v]
          pred[v]=u # le predecesseur de v est le dernier noeud du frigo
        end
      end
@@ -80,15 +84,15 @@ input: 2 entier: i le noeud de depart et j le noeud d'arrivee
        un tableau a 2 dimensions: matadj qui est la matrice d'adjacence du graphe dont les elements peuvent etre des entiers ou des reels
 output: renvoie une liste de 2 elements: le premier etant la distance entre les 2 noeuds, le deuxieme etant le chemin parcouru entre les deux noeuds
 =#
-function floydWarshall(i,j,matadj)
-   n=size(matadj,1)
-   mat = transform(matadj,n)
+function floydWarshall(i,j,matcost)
+   n=size(matcost,1)
+   #mat = transform(matcost,n)
 
    #initialisation de la matrice pred
    pred = Matrix{Int64}(n,n)
    for a=1:n
      for b=1:n
-      if ((a==b) || (mat[a,b]==Inf))
+      if ((a==b) || (matcost[a,b]==Inf))
         pred[a,b] = -1
       else
         pred[a,b] = a
@@ -101,8 +105,8 @@ function floydWarshall(i,j,matadj)
      for l=1:n
        for m=1:n
          # si le plus court chemin passe par k alors on peut le diviser en 2sous-chemin allant de l a k et de k a m
-         if (mat[l,m] > (mat[l,k]+mat[k,m]))
-          mat[l,m] = mat[l,k]+mat[k,m]
+         if (matcost[l,m] > (matcost[l,k]+matcost[k,m]))
+          matcost[l,m] = matcost[l,k]+matcost[k,m]
           pred[l,m] = pred[k,m]
          end
         end
@@ -117,49 +121,39 @@ function floydWarshall(i,j,matadj)
      s = pred[i,s]
    end
    push!(path,j)
-   return [mat[i,j],path]
+   return [matcost[i,j],path]
  end
 
- p = [0 1/85 1/217 0 1/173 0 0 0 0 0
- 1/85 0 0 0 0 1/80 0 0 0 0
- 1/217 0 0 0 0 0 1/186 1/103 0 0
- 0 0 0 0 0 0 0 1/183 0 0
- 1/173 0 0 0 0 0 0 0 0 1/502
- 0 1/80 0 0 0 0 0 0 1/250 0
- 0 0 1/186 0 0 0 0 0 0 0
- 0 0 1/103 1/183 0 0 0 0 0 1/167
- 0 0 0 0 0 1/250 0 0 0 1/84
- 0 0 0 0 1/502 0 0 1/167 1/84 0]
-
- q = [0 85 217 0 173 0 0 0 0 0
- 85 0 0 0 0 80 0 0 0 0
- 217 0 0 0 0 0 186 103 0 0
- 0 0 0 0 0 0 0 183 0 0
- 173 0 0 0 0 0 0 0 0 502
- 0 80 0 0 0 0 0 0 250 0
- 0 0 186 0 0 0 0 0 0 0
- 0 0 103 183 0 0 0 0 0 167
- 0 0 0 0 0 250 0 0 0 84
- 0 0 0 0 502 0 0 167 84 0]
-
- println(floydWarshall(1,10,p))
- println(dijkstra(1,10,p))
-
-
-#=function main()
+function main()
   println("enter the path of your .csv file :")
   path = input() #Path of the .csv file
+  matInput = readdlm(path, ',');
   println("node 1 :")
   node1 = parse(Int,input())
   println("node 2 :")
   node2 = parse(Int,input())
+  println("Type cost if the .csv contains a cost matrix, adj if it contains an adjancy matrix")
+  notOk = true
+  matcount = Matrix{Float64}(size(matInput,1),size(matInput,1))
+  while(notOk)
+    typeOfMatrix = input();
+    if (typeOfMatrix=="cost")
+      matcount = transform(matInput,size(matInput,1),false)
+      notOk=false
+    elseif (typeOfMatrix == "adj")
+      matcount = transform(matInput,size(matInput,1),true)
+      notOk=false
+    else
+      println("Invalid entry, please type again")
+    end
+  end
 
-  matadj = readdlm(path, ',');
+
    #les fonctions s'executent ici :
    #type of matadj : Array{Float64,2} --> pas besoin de conversion :)
-   println("Dijstra result : ")
-   println(dijkstra(node1,node2,matadj))
-   println("FloydWarshall result : ")
-   println(floydWarshall(node1,node2,matadj))
+   println("Dijkstra result : ")
+   println(dijkstra(node1,node2,matcount))
+   println("Floyd-Warshall result : ")
+   println(floydWarshall(node1,node2,matcount))
  end
- main();=#
+ main();
