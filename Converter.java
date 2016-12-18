@@ -6,15 +6,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.FileWriter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.LinkedList;
+
 import java.io.File;
 import com.csvreader.CsvWriter;
 
 
 /**
  * Created by Sami on 01/12/2016.
+ * Modified by Gilles with the CSV implementation on 07/12/2016
  */
 public class Converter {
     public static float[][] matrix;
@@ -72,7 +71,7 @@ public class Converter {
 
     public static void main(String[] args) {
         System.out.println("Please put the path of your gml graph followed by a space, followed by the name of the desired csv file");
-        System.out.println("home/username/Desktop/graph.gml name.csv");
+        System.out.println("Example : home/username/Desktop/graph.gml name.csv");
         Scanner s = new Scanner(System.in);
         String parts = s.nextLine();
         String[] parting = parts.split(" ");
@@ -96,9 +95,9 @@ public class Converter {
                         }
                     }catch(NullPointerException e ){
                         System.out.println("invalid path");
+                    }finally {
+                        csvOutput.close();
                     }
-                   
-                    csvOutput.close();
                 }else{
                     System.out.println("Invalid name : the csv file already exists in the current location");
                 }
